@@ -1,0 +1,34 @@
+{
+  "name": "paceo-api",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/chausson-ap/paceo-api-js#readme",
+  "bugs": {
+    "url": "https://github.com/chausson-ap/paceo-api-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chausson-ap/paceo-api-js.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.4.0",
+    "file-type": "^22.0.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "mariadb": "^3.5.2",
+    "multer": "^2.1.1"
+  }
+}
