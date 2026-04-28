@@ -2,9 +2,9 @@ import { randomUUID } from 'crypto';
 import pool from '../config/db.js';
 import * as structureModel from '../models/structure.model.js';
 import * as userStructureModel from '../models/user_structure.model.js';
+import { normalizePhone } from './phone.js';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_REGEX = /^[\d\s+().-]{0,20}$/;
 // NOTE: la colonne BDD numero_rna est actuellement VARCHAR(9). Le format
 // officiel RNA est « W + 9 chiffres » = 10 caractères. Tant que la migration
 // VARCHAR(10) n'est pas appliquée, on reste permissif sur 9 caractères.
@@ -37,7 +37,7 @@ const hasControlOrHtml = (v) => {
 const validateLengths = (data) => {
   const {
     siret, siren, numero_rna, etab_code_postal, gest_code_postal,
-    etab_courriel, gest_courriel, etab_telephone, gest_telephone,
+    etab_courriel, gest_courriel,
   } = data;
 
   if (siret != null && String(siret) !== '' && !/^\d{14}$/.test(String(siret))) {
@@ -62,12 +62,6 @@ const validateLengths = (data) => {
       if (s.length > 128 || !s.includes('@') || !EMAIL_REGEX.test(s)) {
         throw badRequest('Courriel invalide');
       }
-    }
-  }
-
-  for (const tel of [etab_telephone, gest_telephone]) {
-    if (tel != null && String(tel) !== '' && !PHONE_REGEX.test(String(tel))) {
-      throw badRequest('Téléphone invalide');
     }
   }
 
@@ -98,6 +92,16 @@ export const listStructures = async (userId) => {
 
 export const createStructure = async (data, userId) => {
   validateLengths(data);
+  if (data.etab_telephone != null && String(data.etab_telephone) !== '') {
+    data.etab_telephone = normalizePhone(data.etab_telephone);
+  } else {
+    data.etab_telephone = '';
+  }
+  if (data.gest_telephone != null && String(data.gest_telephone) !== '') {
+    data.gest_telephone = normalizePhone(data.gest_telephone);
+  } else {
+    data.gest_telephone = '';
+  }
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
@@ -164,6 +168,14 @@ export const updateStructure = async (id, data, userId) => {
   const role = await userStructureModel.findRole(userId, id);
   if (!role) throw forbidden();
   validateLengths(data);
+  if (data.etab_telephone !== undefined) {
+    data.etab_telephone = (data.etab_telephone == null || String(data.etab_telephone) === '')
+      ? '' : normalizePhone(data.etab_telephone);
+  }
+  if (data.gest_telephone !== undefined) {
+    data.gest_telephone = (data.gest_telephone == null || String(data.gest_telephone) === '')
+      ? '' : normalizePhone(data.gest_telephone);
+  }
   return await structureModel.update(id, data);
 };
 

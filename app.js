@@ -12,6 +12,7 @@ import boConventionRoutes from './routes/bo.convention.route.js';
 import boModeleRoutes from './routes/bo.modele.route.js';
 import boAnnexeRoutes from './routes/bo.annexe.route.js';
 import boEvenementRoutes from './routes/bo.evenement.route.js';
+import boStructureRoutes from './routes/bo.structure.route.js';
 
 // Fail-fast : refuse de démarrer si JWT_SECRET est absent ou trop faible.
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -49,6 +50,7 @@ app.use('/api/piece_jointes', pieceJointeRoutes);
 app.use('/api/bo/auth', boAuthRoutes);
 app.use('/api/bo/conventions/modeles', boModeleRoutes);
 app.use('/api/bo/conventions', boConventionRoutes);
+app.use('/api/bo/structures', boStructureRoutes);
 app.use('/api/bo/annexes', boAnnexeRoutes);
 app.use('/api/bo/evenements', boEvenementRoutes);
 

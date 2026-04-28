@@ -12,6 +12,18 @@ export const list = async (req, res) => {
   }
 };
 
+export const getOne = async (req, res) => {
+  console.log('[ctrl] modele.getOne entered');
+  try {
+    const modele = await modeleService.getModeleById(req.params.id);
+    res.json(modele);
+  } catch (err) {
+    console.error('[ctrl] modele.getOne err:', err);
+    if (err.cause) console.error('[ctrl] cause:', err.cause);
+    res.status(err.status || 500).json({ error: err.message });
+  }
+};
+
 export const create = async (req, res) => {
   console.log('[ctrl] modele.create entered');
   try {

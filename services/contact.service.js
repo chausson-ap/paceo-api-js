@@ -1,10 +1,10 @@
 import { randomUUID } from 'crypto';
 import * as contactModel from '../models/contact.model.js';
 import * as userStructureModel from '../models/user_structure.model.js';
+import { normalizePhone } from './phone.js';
 
 const ALLOWED_ROLES = [0, 1, 2];
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_REGEX = /^[\d\s+().-]{0,20}$/;
 
 const forbidden = (msg = 'Accès refusé') => {
   const err = new Error(msg);
@@ -45,9 +45,6 @@ const validateFields = (data, { partial = false } = {}) => {
     const s = String(data.courriel);
     if (s.length > 128 || !EMAIL_REGEX.test(s)) throw badRequest('courriel invalide');
   }
-  if (data.telephone !== undefined && data.telephone !== null && data.telephone !== '') {
-    if (!PHONE_REGEX.test(String(data.telephone))) throw badRequest('telephone invalide');
-  }
   if (data.fonction !== undefined && data.fonction !== null && data.fonction !== '') {
     if (String(data.fonction).length > 128) throw badRequest('fonction trop long (max 128)');
   }
@@ -63,6 +60,11 @@ export const createContact = async (structureId, data, userId) => {
   const role = await userStructureModel.findRole(userId, structureId);
   if (!role) throw forbidden();
   validateFields(data);
+  if (data.telephone != null && String(data.telephone) !== '') {
+    data.telephone = normalizePhone(data.telephone);
+  } else {
+    data.telephone = '';
+  }
   const id = randomUUID();
   await contactModel.create({
     id,
@@ -84,6 +86,10 @@ export const updateContact = async (contactId, data, userId) => {
   const role = await userStructureModel.findRole(userId, contact.structure_id);
   if (!role) throw forbidden();
   validateFields(data, { partial: true });
+  if (data.telephone !== undefined) {
+    data.telephone = (data.telephone == null || String(data.telephone) === '')
+      ? '' : normalizePhone(data.telephone);
+  }
   const patch = { ...data };
   if (patch.role !== undefined) patch.role = Number(patch.role);
   if (patch.correspondant_gestion !== undefined) {
