@@ -5,7 +5,7 @@ export const listAll = async () => {
   const conn = await pool.getConnection();
   try {
     const rows = await conn.query(
-      'SELECT modele_id AS id, nom, type_modele FROM convention_modeles ORDER BY nom'
+      'SELECT modele_id AS id, nom, titre, type_modele FROM convention_modeles ORDER BY nom'
     );
     console.log('[model] modele.listAll: rows:', rows.length);
     return rows;
@@ -18,7 +18,7 @@ export const getById = async (id) => {
   const conn = await pool.getConnection();
   try {
     const rows = await conn.query(
-      'SELECT modele_id AS id, nom, type_modele FROM convention_modeles WHERE modele_id = ?',
+      'SELECT modele_id AS id, nom, titre, type_modele FROM convention_modeles WHERE modele_id = ?',
       [id]
     );
     return rows[0];

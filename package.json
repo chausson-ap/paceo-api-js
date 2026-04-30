@@ -2,13 +2,13 @@
   "name": "paceo-api",
   "version": "1.0.0",
   "description": "",
-  "homepage": "https://github.com/chausson-ap/paceo-api-js#readme",
+  "homepage": "https://github.com/antoineprth/paceo-api-js#readme",
   "bugs": {
-    "url": "https://github.com/chausson-ap/paceo-api-js/issues"
+    "url": "https://github.com/antoineprth/paceo-api-js/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chausson-ap/paceo-api-js.git"
+    "url": "git+https://github.com/antoineprth/paceo-api-js.git"
   },
   "license": "ISC",
   "author": "",
@@ -30,6 +30,7 @@
     "jsonwebtoken": "^9.0.3",
     "mariadb": "^3.5.2",
     "multer": "^2.1.1",
+    "puppeteer": "^23.11.1",
     "sanitize-html": "^2.17.3"
   }
 }

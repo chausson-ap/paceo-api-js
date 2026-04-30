@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { list, getOne, create, update, remove } from '../controllers/modele.controller.js';
+import { list, getOne, create, update, remove, preview } from '../controllers/modele.controller.js';
 import {
   list as listArticles,
   create as createArticle,
@@ -43,6 +43,11 @@ router.put('/:modeleId/articles/order', reorderArticles);
 router.get('/:modeleId/vus', listVus);
 router.post('/:modeleId/vus', createVu);
 router.put('/:modeleId/vus/order', reorderVus);
+
+// Aperçu PDF d'un modèle (placé avant /:id pour la lisibilité, mais les
+// routes scopées /:id/articles/... et /:id/vus/... restent prioritaires
+// car déclarées plus haut).
+router.get('/:id/preview.pdf', preview);
 
 // Modèle (par id), placés après pour ne pas masquer /articles/... et /vus/...
 router.get('/:id', getOne);

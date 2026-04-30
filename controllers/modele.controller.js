@@ -1,4 +1,5 @@
 import * as modeleService from '../services/modele.service.js';
+import * as modelePreviewService from '../services/modele.preview.service.js';
 
 export const list = async (req, res) => {
   console.log('[ctrl] modele.list entered');
@@ -57,5 +58,20 @@ export const remove = async (req, res) => {
     console.error('[ctrl] modele.remove err:', err);
     if (err.cause) console.error('[ctrl] cause:', err.cause);
     res.status(err.status || 400).json({ error: err.message });
+  }
+};
+
+export const preview = async (req, res) => {
+  console.log('[ctrl] modele.preview entered');
+  try {
+    const { buffer, filename } = await modelePreviewService.generatePreviewPDF(req.params.id);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+    res.setHeader('Cache-Control', 'no-store');
+    res.send(buffer);
+  } catch (err) {
+    console.error('[ctrl] modele.preview err:', err);
+    if (err.cause) console.error('[ctrl] cause:', err.cause);
+    res.status(err.status || 500).json({ error: err.message });
   }
 };

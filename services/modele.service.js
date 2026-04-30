@@ -43,6 +43,7 @@ export const getModeleById = async (id) => {
   return {
     id: existing.id,
     nom: existing.nom,
+    titre: existing.titre ?? '',
     type_modele: Number(existing.type_modele ?? 0),
     articles: rows.map((r) => ({
       id: r.id,
